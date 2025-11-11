@@ -19,7 +19,6 @@ O soluție **serverless** care procesează automat datele ATP (2000–2025) și 
 | Djokovic N.     | 142        | 24               | 41           | 12          | 2006-04-10  | 2025-02-16  |
 | Nadal R.        | 131        | 22               | 26           | 15          | 2003-06-24  | 2024-01-20  |
 
-📁 [Vezi fișierul complet (`sample_output/atp-top-50-08-11-2025.csv`)](sample_output/atp-top-50-08-11-2025.csv)
 
 ---
 
@@ -48,6 +47,7 @@ O soluție **serverless** care procesează automat datele ATP (2000–2025) și 
 | **Python** | `pandas` (procesare), `boto3` (S3), `kagglehub` (download) |
 
 ---
+
 
 ## ⚙️ Configurare locală (pentru test)
 
