@@ -1,0 +1,3 @@
+# Date mari / temporare
+*.csv
+!sample_output/*.csv   # permite doar output-urile mici de exemplu
