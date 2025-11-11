@@ -45,24 +45,15 @@ A **serverless** solution that automatically processes ATP data (2000–2025) an
 | **IAM Role** | Minimum permissions: `s3:GetObject`, `PutObject`, `ListBucket` |
 | **Python** | `pandas` (processing), `boto3` (S3), `kagglehub` (downloading) |
 
+---
+
 ## 🗺 Pipeline Architecture
 
-```mermaid
 flowchart TD
-    A["EventBridge Rule (Mon, 06:00 UTC)"]
-    --> B["AWS Lambda
-- download dataset from Kaggle
-- read S3
-- process with pandas (Top 50)
-- save in S3"]
-    --> C["S3 Bucket
-• input: atp_tennis.csv
-• output: results/*.csv"]
-    --> D["CloudWatch Logs
-• logging & monitor
-• troubleshooting"]
-
-
+    A["EventBridge Rule\n(Mon, 06:00 UTC)"]
+    --> B["AWS Lambda\n• Download dataset from Kaggle\n• Read from S3\n• Process with pandas (Top 50)\n• Save results to S3"]
+    --> C["S3 Bucket\n• Input: atp_tennis.csv\n• Output: results/*.csv"]
+    --> D["CloudWatch Logs\n• Logging & monitoring\n• Troubleshooting"]
 
 ---
 
