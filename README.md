@@ -4,15 +4,15 @@
 ![AWS Lambda](https://img.shields.io/badge/AWS-Lambda-FF9900)
 ![pandas](https://img.shields.io/badge/pandas-2.0+-1572B6)
 
-O soluție **serverless** care procesează automat datele ATP (2000–2025) și generează săptămânal un raport Top 50 jucători, folosind AWS Lambda, S3, EventBridge și CloudWatch.
+A **serverless** solution that automatically processes ATP data (2000–2025) and generates a weekly Top 50 Players report, AWS Lambda, S3, EventBridge, and CloudWatch.
 
-✅ Rulează automat în fiecare **luni la 06:00 UTC**  
-✅ Zero cost în afara execuției Lambda  
-✅ Scalabil și ușor de întreținut
+✅ Runs automatically every **Monday at 06:00 UTC** 
+✅ Zero cost outside of Lambda execution 
+✅ Scalable and easy to maintain
 
 ---
 
-## 📊 Exemplu output
+## 📊 Example output
 
 | player_name     | total_wins | grand_slam_wins | atp1000_wins | atp500_wins | first_win   | last_win    |
 |-----------------|------------|------------------|--------------|-------------|-------------|-------------|
@@ -22,70 +22,72 @@ O soluție **serverless** care procesează automat datele ATP (2000–2025) și 
 
 ---
 
-## 🧠 Ce face pipeline-ul?
+## 🧠 What does the pipeline do?
 
-1. **Descarcă** datasetul ATP (2000–2025) de pe Kaggle folosind `kagglehub`  
-2. **Încarcă** CSV-ul într-un bucket S3 (`s3://atp-analysis-cristina-simion/atp_tennis.csv`)  
-3. **Rulează** o funcție Lambda (Python + pandas):
-   - calculează victorii totale și pe categorii (GS, ATP1000, ATP500)
-   - identifică prima/ultima victorie per jucător
-   - sortează și selectează **Top 50**
-4. **Salvează** raportul în `s3://.../results/atp-top-50-DD-MM-YYYY.csv`
-5. **Declanșat automat** cu EventBridge (`cron(0 6 ? * MON *)`)
-
+1. **Download** the ATP dataset (2000–2025) from Kaggle using `kagglehub` 
+2. **Upload** the CSV to an S3 bucket (`s3://atp-analysis-cristina-simion/atp_tennis.csv`) 
+3. **Run** a Lambda function (Python + pandas):
+- calculate total and category wins (GS, ATP1000, ATP500)
+- identify first/last win per player
+- sort and select **Top 50**
+4. **Save** the report to `s3://.../results/atp-top-50-DD-MM-YYYY.csv`
+5. **Automatically triggered** with EventBridge (`cron(0 6 ? * MON *)`)
 ---
 
-## 🛠 Tehnologii
+## 🛠 Technologies
 
-| Componentă | Rol |
+| Component | Role |
 |-----------|-----|
-| **AWS Lambda** | Execuție serverless a logicii Python |
-| **Amazon S3** | Stocare input/output |
-| **EventBridge** | Planificare săptămânală (luni, 06:00 UTC) |
+| **AWS Lambda** | Serverless execution of Python logic |
+| **Amazon S3** | Input/output storage |
+| **EventBridge** | Weekly scheduling (Monday, 06:00 UTC) |
 | **CloudWatch** | Logging & troubleshooting |
-| **IAM Role** | Permisii minime: `s3:GetObject`, `PutObject`, `ListBucket` |
-| **Python** | `pandas` (procesare), `boto3` (S3), `kagglehub` (download) |
+| **IAM Role** | Minimum permissions: `s3:GetObject`, `PutObject`, `ListBucket` |
+| **Python** | `pandas` (processing), `boto3` (S3), `kagglehub` (downloading) |
 
-## 🗺 Arhitectură Pipeline
-┌──────────────────────┐
-│ EventBridge Rule │
-│ (cron: Mon 06:00 UTC)│
-└──────────┬───────────┘
-▼
-┌──────────────────────┐
-│ AWS Lambda │
-│ • descarcă dataset │
-│ de pe Kaggle │
-│ • citește S3 │
-│ • procesează cu │
-│ pandas (Top 50) │
-│ • încarcă rezultatul│
-│ în S3 │
-└──────────┬───────────┘
-▼
-┌──────────────────────┐
-│ S3 Bucket │
-│ • input: │
-│ atp_tennis.csv │
-│ • output: │
-│ results/*.csv │
-└──────────┬───────────┘
-▼
-┌──────────────────────┐
-│ CloudWatch Logs │
-│ • logging & monitor │
-│ • troubleshooting │
-└──────────────────────┘
+## 🗺 Pipeline Architecture
+
++---------------------+
+| EventBridge Rule |
+| (Mon, 06:00 UTC) |
++----------+----------+
+|
+v
++---------------------+
+| AWS Lambda |
+| - download dataset |
+| from Kaggle |
+| - read S3 |
+| - process with |
+| pandas (Top 50) |
+| - save in S3 |
++----------+----------+
+|
+v
++---------------------+
+| S3 Bucket |
+| • input: |
+| atp_tennis.csv |
+| • output: |
+| results/*.csv |
++----------+----------+
+|
+v
++---------------------+
+| CloudWatch Logs |
+| • logging & monitor |
+| • troubleshooting |
++---------------------+
 
 ---
 
 
-## ⚙️ Configurare locală (pentru test)
+## ⚙️ Local setup (for testing)
 
-> 🔁 Datele de intrare nu sunt incluse în acest repo din motive de dimensiune și licență. Pipeline-ul le descarcă automat de pe Kaggle la fiecare execuție.
+> 🔁 Input data is not included in this repo due to size and licensing reasons. The pipeline automatically downloads it from Kaggle on each run.
 
-Pentru test local:
-1. Instalează dependințele:
+For local testing:
+1. Install dependencies:
    ```bash
    pip install -r requirements.txt
 
